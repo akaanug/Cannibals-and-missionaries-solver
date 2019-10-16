@@ -6,6 +6,7 @@
 package cmsolver;
 
 import java.util.ArrayList;
+import java.util.Queue;
 
 /**
  * Uses breadth-first search.
@@ -44,7 +45,7 @@ public class SolutionFinder {
 
     private void addStateToHistory( State newState ) {
 
-        if ( newState.invalidState()  ) { //&& newState.equalsToAnyPrevStates()
+        if ( newState.invalidState() ) { //&& newState.equalsToAnyPrevStates()
             return;
         }
 
@@ -52,7 +53,10 @@ public class SolutionFinder {
     }
 
     /**
-     *
+     * Main method that basically does all the work. Compares startState with 
+     * the endState and if it is the end state, store it in solutions ArrayList
+     * The ones that are not equal to endState gets stored in searchHistory
+     * 
      * @param startState
      * @param endState
      * @return an arraylist of all succeeding solutions
@@ -64,8 +68,9 @@ public class SolutionFinder {
         boolean foundFirstSolution = false;
 
         ArrayList solutions;
+        //Queue allPaths; might add
         solutions = new ArrayList();
-        
+
         //Add StartState to the Search History
         addStateToHistory( startState );
 
@@ -74,12 +79,10 @@ public class SolutionFinder {
 
             State current = (State) (searchHistory.get( CURRENT_ROOT_STATE ));
             searchHistory.remove( CURRENT_ROOT_STATE );
-            //search through all previous states and check if any two are same
-            //adds paths based on state levels
             if ( current.equals( endState ) ) {
                 if ( foundFirstSolution ) {
                     if ( current.getStateLevel() <= solutionLevel ) {
-                        System.out.println( "state: "  + current.getStateLevel() );
+                        System.out.println( "state: " + current.getStateLevel() );
                         solutions.add( current );
                     } else {
                         allOptimalSolutionsFound = true;
@@ -89,11 +92,20 @@ public class SolutionFinder {
                     solutionLevel = current.getStateLevel();
                     solutions.add( current );
                 }
-            }
-            else if( current.getStateLevel() == 12 ) { // max state level in a 4c/m problem is?
+            } else if ( current.getStateLevel() == 15 ) { // if no solution is found // max state level in a 4c/m problem is? //what does state level even represents here!?!?!?
+//                for ( Object k : searchHistory ) {
+//                    if ( ((State) k).equalsToCM( 4, 4, true ) ) {
+//                        System.out.println( "*************" );
+//                    }
+//                    
+//                    if ( current.getStateLevel() <= solutionLevel ) {
+//                        ((State) k).print();
+//                        solutionLevel = ((State)k).getStateLevel();
+//                    }
+//
+//                }
                 return solutions;
-            }
-            else {
+            } else {
                 generateSuccessors( current );
             }
 
@@ -106,8 +118,6 @@ public class SolutionFinder {
         int cannibalNum;
         int missionaryNum;
         int stateName = 1;
-        
-        
 
         //loop through all possible combinations
         for ( int m = 0; m <= boatSize; m++ ) {

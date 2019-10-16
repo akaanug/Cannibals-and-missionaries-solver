@@ -14,7 +14,7 @@ public class State {
     public int missionaryNum;
     public int cannibalNum;
     public boolean side;
-    private static int eachAtStart = 20;
+    private static int eachAtStart = 3;
     private String name;
     private State previousState;
     private int stateLevel = 0;
@@ -140,6 +140,12 @@ public class State {
         return (s.cannibalNum == this.cannibalNum
                 && s.missionaryNum == this.missionaryNum
                 && s.side == this.side);
+    }
+    
+    public boolean equalsToCM( int c, int m, boolean s ) { //(s == true) for west
+        return ( c == this.cannibalNum
+                && m == this.missionaryNum
+                && s == this.side );
     }
 
 }

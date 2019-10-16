@@ -23,7 +23,7 @@ public class CMSolver {
         State startState;
         State endState;
 
-        startState = new State( 20, 20, true, "Root", 0 );
+        startState = new State( 3, 3, true, "Root", 0 );
         endState = new State( 0, 0, false, "Goal", 999999999 );
 
         ArrayList solution = sf.getSolutionStates( startState, endState );
