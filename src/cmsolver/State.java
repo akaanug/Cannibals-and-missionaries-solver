@@ -14,7 +14,7 @@ public class State {
     public int missionaryNum;
     public int cannibalNum;
     public boolean side;
-    private static int eachAtStart = 3;
+    private static int eachAtStart = 4;
     private String name;
     private State previousState;
     private int stateLevel = 0;
@@ -67,16 +67,19 @@ public class State {
         return this.name;
     }
 
-    public void printThisNode() {
+    public void printThisState() {
         int whichSide;
         if ( side ) {
             whichSide = 1;
         } else {
             whichSide = 0;
         }
-        System.out.println( missionaryNum + " " + cannibalNum + " " + whichSide );
+        System.out.println( missionaryNum + "M" + cannibalNum + "C" + whichSide );
     }
 
+    /**
+     * Prints all states that are connected with each other.
+     */
     public void print() {
         if ( previousState != null ) {
             previousState.print();
@@ -120,32 +123,6 @@ public class State {
 
         return false;
 
-    }
-
-    public boolean equalsToAnyPrevStates() {
-        if ( previousState == null ) {
-            return false;
-        }
-        if ( previousState.cannibalNum == this.cannibalNum
-                && previousState.missionaryNum == this.missionaryNum
-                && previousState.side == this.side ) {
-            System.out.println( "equal" );
-            return true;
-        } else {
-            return previousState.equalsToAnyPrevStates();
-        }
-    }
-
-    public boolean equalsToState( State s ) {
-        return (s.cannibalNum == this.cannibalNum
-                && s.missionaryNum == this.missionaryNum
-                && s.side == this.side);
-    }
-    
-    public boolean equalsToCM( int c, int m, boolean s ) { //(s == true) for west
-        return ( c == this.cannibalNum
-                && m == this.missionaryNum
-                && s == this.side );
     }
 
 }

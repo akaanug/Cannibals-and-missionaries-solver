@@ -23,10 +23,10 @@ public class CMSolver {
         State startState;
         State endState;
 
-        startState = new State( 3, 3, true, "Root", 0 );
-        endState = new State( 0, 0, false, "Goal", 999999999 );
+        startState = new State( 4, 4, true, "Root", 0 );
+        endState = new State( 0, 0, false, "Goal", 1000000 );
 
-        ArrayList solution = sf.getSolutionStates( startState, endState );
+        ArrayList solution = sf.getSolutions( startState, endState );
 
         printSolutions( solution );
     }
@@ -34,18 +34,18 @@ public class CMSolver {
     private static void printSolutions( ArrayList solution ) {
         //Are there any solutions
         if ( solution.isEmpty() ) {
-            System.out.println( "\n\nNO SOLUTIONS HAVE BEEN FOUND\r\n" );
+            System.out.println( "\n\nNO SOLUTIONS!\n\n" );
         } else {
-            int Solfound = 1;
+            int solutionCount = 1;
             //show the Solutions
             for ( int i = 0; i < solution.size(); i++ ) {
                 State s = (State) solution.get(i);
-                System.out.println( "=====FOUND SOLUTION ["
-                        + Solfound++ + "]=====\r\n" );
-                System.out.println( "This solution was found at level ["
-                        + s.getStateLevel() + "]\r\n" );
+                System.out.println( "******FOUND SOLUTION !("
+                        + solutionCount++ + ")******\n\n" );
+                System.out.println( "Solution found at state level: ("
+                        + s.getStateLevel() + ")\n\n" );
                 s.print();
-                System.out.println( "\r\n" );
+                System.out.println( "\n\n" );
             }
         }
     }
