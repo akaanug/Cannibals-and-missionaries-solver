@@ -37,23 +37,22 @@ public class SolutionFinder {
         boolean foundFirstSolution = false;
 
         ArrayList solutions;
-        //Queue allPaths; might add
         solutions = new ArrayList();
 
         //Add StartState to the Search History
         addStateToHistory( startState );
+        
+        startState.printThisState();
+        System.out.println( "---------\nNext State Level: ( Remove the first state, " + 
+                "print the remaining state(s)(if there is any), then search and print removed state's child(s)(if there is any). )\n-----------" );
+
 
         //loop through until all the solutions have been found
         while ( searchHistory.size() > 0 && !allOptimalSolutionsFound ) {
 
-//            searchHistory.forEach( ( k ) -> {
-//                ((State) k).printThisState();
-//            } );
-//            System.out.println("-----");
-
             State current = (State) (searchHistory.get( CURRENT_ROOT_STATE ));
             searchHistory.remove( CURRENT_ROOT_STATE );
-            if ( current.equals( endState ) ) {
+            if ( current.equalsToState( endState ) ) {
                 if ( foundFirstSolution ) {
                     if ( current.getStateLevel() <= solutionLevel ) {
                         System.out.println( "state: " + current.getStateLevel() );
@@ -66,15 +65,37 @@ public class SolutionFinder {
                     solutionLevel = current.getStateLevel();
                     solutions.add( current );
                 }
-            } else if ( current.getStateLevel() == 15 ) {
-                // to break out of loop if there isn't any solution.
-                break;
             } else {
                 generateNewStates( current );
             }
 
         }
         return solutions;
+    }
+
+    
+    //checks if the current state is equal to any other states in the path
+    private boolean equalToAnyParent( State current ) {
+
+        if ( current.getStateLevel() == 0 ) {
+            return false;
+        }
+
+        State prevStates = current.previousState;
+
+        while ( prevStates.getStateLevel() != 0 ) {
+            
+            if ( current.equalsToState( prevStates ) ) { //to prevent loops
+                return true;
+            }
+
+            prevStates = prevStates.previousState;
+            
+            if ( current.equalsToState( prevStates ) ) { //to prevent loops
+                return true;
+            }
+        }
+        return false;
     }
 
     private void addStateToHistory( String stateName, State parent,
@@ -92,6 +113,10 @@ public class SolutionFinder {
                 + boatDirection * missionaryNum,
                 parent.cannibalNum + boatDirection * cannibalNum, !parent.side,
                 newStateName, parent.getStateLevel() + 1, parent );
+
+        if ( equalToAnyParent( newState ) ) {
+            return;
+        }
 
         addStateToHistory( newState );
 
@@ -115,7 +140,6 @@ public class SolutionFinder {
         //loop through all possible combinations
         for ( int m = 0; m <= boatSize; m++ ) {
             for ( int c = 0; c <= boatSize; c++ ) {
-
                 if ( m == 0 && c == 0 ) {
                     continue;
                 }
@@ -125,10 +149,16 @@ public class SolutionFinder {
 
                 missionaryNum = m;
                 cannibalNum = c;
+
                 addStateToHistory( "_" + stateName++, current,
                         missionaryNum, cannibalNum );
+
             }
         }
+        searchHistory.forEach( ( k ) -> {
+            ((State) k).printThisState();
+        } );
+        System.out.println( "---------\nNext State Level:\n-----------" );
     }
 
 }

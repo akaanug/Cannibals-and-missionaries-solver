@@ -23,8 +23,11 @@ public class CMSolver {
         State startState;
         State endState;
 
+        
+        //you also need to change eachAtStart from the State class
+        //if you want to test with other variables
         startState = new State( 4, 4, true, "Root", 0 );
-        endState = new State( 0, 0, false, "Goal", 1000000 );
+        endState = new State( 0, 0, false, "Goal", 999999999 );
 
         ArrayList solution = sf.getSolutions( startState, endState );
 

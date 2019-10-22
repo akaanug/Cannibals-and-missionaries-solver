@@ -13,10 +13,10 @@ public class State {
 
     public int missionaryNum;
     public int cannibalNum;
-    public boolean side;
-    private static int eachAtStart = 4;
+    public boolean side; //west if true
+    public static int eachAtStart = 4;
     private String name;
-    private State previousState;
+    public State previousState;
     private int stateLevel = 0;
 
     /**
@@ -74,7 +74,8 @@ public class State {
         } else {
             whichSide = 0;
         }
-        System.out.println( missionaryNum + "M" + cannibalNum + "C" + whichSide );
+        System.out.println( missionaryNum + "M" +
+                cannibalNum + "C" + whichSide + " -> " + name );
     }
 
     /**
@@ -96,8 +97,12 @@ public class State {
                 + cannibalNum + "C"
                 + whichSide );
     }
+    
+    public void setEach( int amount ) {
+        eachAtStart = amount;
+    }
 
-    public boolean equals( State stateToCheck ) {
+    public boolean equalsToState( State stateToCheck ) {
         return (missionaryNum == stateToCheck.missionaryNum
                 && cannibalNum == stateToCheck.cannibalNum
                 && side == stateToCheck.side);
