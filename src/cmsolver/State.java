@@ -6,7 +6,6 @@
 package cmsolver;
 
 /**
- *
  * @author kaan
  */
 public class State {
@@ -74,12 +73,12 @@ public class State {
         } else {
             whichSide = 0;
         }
-        System.out.println( missionaryNum + "M" +
-                cannibalNum + "C" + whichSide + " -> " + name );
+        System.out.println( missionaryNum + "M"
+                + cannibalNum + "C" + whichSide + " -> " + name );
     }
 
     /**
-     * Prints all states that are connected with each other.
+     * Prints all states recursively
      */
     public void print() {
         if ( previousState != null ) {
@@ -97,17 +96,28 @@ public class State {
                 + cannibalNum + "C"
                 + whichSide );
     }
-    
+
     public void setEach( int amount ) {
         eachAtStart = amount;
     }
 
+    /**
+     * Compare with another state's m, c and side(boat location).
+     *
+     * @param stateToCheck
+     * @return
+     */
     public boolean equalsToState( State stateToCheck ) {
         return (missionaryNum == stateToCheck.missionaryNum
                 && cannibalNum == stateToCheck.cannibalNum
                 && side == stateToCheck.side);
     }
 
+    /**
+     * Checks if the state is appropriate.
+     *
+     * @return
+     */
     public boolean invalidState() {
 
         if ( cannibalNum < 0 || missionaryNum < 0 || missionaryNum > eachAtStart

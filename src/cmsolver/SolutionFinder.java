@@ -41,17 +41,17 @@ public class SolutionFinder {
 
         //Add StartState to the Search History
         addStateToHistory( startState );
-        
-        startState.printThisState();
-        System.out.println( "---------\nNext State Level: ( Remove the first state, " + 
-                "print the remaining state(s)(if there is any), then search and print removed state's child(s)(if there is any). )\n-----------" );
 
+        startState.printThisState();
+        System.out.println( "---------\nNext State Level: ( Remove the first state, "
+                + "print the remaining state(s)(if there is any), then search and print removed state's child(s)(if there is any). )\n-----------" );
 
         //loop through until all the solutions have been found
         while ( searchHistory.size() > 0 && !allOptimalSolutionsFound ) {
 
             State current = (State) (searchHistory.get( CURRENT_ROOT_STATE ));
             searchHistory.remove( CURRENT_ROOT_STATE );
+
             if ( current.equalsToState( endState ) ) {
                 if ( foundFirstSolution ) {
                     if ( current.getStateLevel() <= solutionLevel ) {
@@ -73,32 +73,46 @@ public class SolutionFinder {
         return solutions;
     }
 
-    
-    //checks if the current state is equal to any other states in the path
+    /**
+     * checks if the current state is equal to any other states in the path
+     * allows to search through states without loops
+     *
+     * @return true if it is equal to any other parent state
+     * @param current
+     */
     private boolean equalToAnyParent( State current ) {
 
-        if ( current.getStateLevel() == 0 ) {
+        if ( current.getStateLevel() == 0 ) { //if current is the starting state
             return false;
         }
 
         State prevStates = current.previousState;
 
         while ( prevStates.getStateLevel() != 0 ) {
-            
-            if ( current.equalsToState( prevStates ) ) { //to prevent loops
+
+            if ( current.equalsToState( prevStates ) ) {
                 return true;
             }
 
             prevStates = prevStates.previousState;
-            
-            if ( current.equalsToState( prevStates ) ) { //to prevent loops
+
+            if ( current.equalsToState( prevStates ) ) {
                 return true;
             }
         }
         return false;
     }
 
-    private void addStateToHistory( String stateName, State parent,
+    /**
+     * adds appropriate states into stateHistory
+     *
+     * @return true if added successfully
+     * @param stateName
+     * @param parent
+     * @param cannibalNum
+     * @param missionaryNum
+     */
+    private boolean addStateToHistory( String stateName, State parent,
             int cannibalNum, int missionaryNum ) {
         int boatDirection;
         if ( parent.side ) {
@@ -114,14 +128,16 @@ public class SolutionFinder {
                 parent.cannibalNum + boatDirection * cannibalNum, !parent.side,
                 newStateName, parent.getStateLevel() + 1, parent );
 
-        if ( equalToAnyParent( newState ) ) {
-            return;
+        if ( equalToAnyParent( newState ) || newState.invalidState() ) {
+            return false;
         }
+        searchHistory.add( newState );
 
-        addStateToHistory( newState );
+        return true;
 
     }
 
+    //to add the first state
     private void addStateToHistory( State newState ) {
 
         if ( newState.invalidState() ) {
@@ -131,6 +147,11 @@ public class SolutionFinder {
         searchHistory.add( newState );
     }
 
+    /**
+     * Generate all children of the current state.
+     *
+     * @param current
+     */
     private void generateNewStates( State current ) {
 
         int cannibalNum;
@@ -150,11 +171,16 @@ public class SolutionFinder {
                 missionaryNum = m;
                 cannibalNum = c;
 
-                addStateToHistory( "_" + stateName++, current,
-                        missionaryNum, cannibalNum );
+                // to label stateNames accordingly
+                if ( !addStateToHistory( "_" + stateName++, current,
+                        missionaryNum, cannibalNum ) ) {
+                    stateName--;
+                }
 
             }
         }
+
+        //prints the searchHistory for tracing purpose
         searchHistory.forEach( ( k ) -> {
             ((State) k).printThisState();
         } );

@@ -23,9 +23,8 @@ public class CMSolver {
         State startState;
         State endState;
 
-        
         //you also need to change eachAtStart from the State class
-        //if you want to test with other variables
+        //if you want to test it with other variables
         startState = new State( 4, 4, true, "Root", 0 );
         endState = new State( 0, 0, false, "Goal", 999999999 );
 
@@ -42,7 +41,7 @@ public class CMSolver {
             int solutionCount = 1;
             //show the Solutions
             for ( int i = 0; i < solution.size(); i++ ) {
-                State s = (State) solution.get(i);
+                State s = (State) solution.get( i );
                 System.out.println( "******FOUND SOLUTION !("
                         + solutionCount++ + ")******\n\n" );
                 System.out.println( "Solution found at state level: ("
